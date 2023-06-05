@@ -107,7 +107,7 @@ pub fn draw_polar(f: fn(f32) -> f32, center: (f32, f32), radius: f32, domain: (f
         );
 
         if i == 0 {
-            draw_line(point.0, point.1, point.0, point.1, 2., GOLD);
+            draw_line(point.0, point.1, point.0, point.1, 2., Color::new(1., 1., 0.5, 1.));
         } else {
             draw_line(prev.0, prev.1, point.0, point.1, 2., Color::new(1., 1., 0.5, 1.));
         }
