@@ -3,10 +3,10 @@ use std::f32::consts::PI;
 
 #[derive(Copy, Clone)]
 pub struct Rect {
-    x: i32,
-    y: i32,
-    w: i32,
-    h: i32
+    pub x: i32,
+    pub y: i32,
+    pub w: i32,
+    pub h: i32
 }
 
 impl Rect {

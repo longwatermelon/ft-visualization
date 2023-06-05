@@ -3,6 +3,9 @@ use std::f32::consts::PI;
 
 mod graph;
 
+const SCRW: f32 = 800.;
+const SCRH: f32 = 600.;
+
 fn f(x: f32) -> f32 {
     f32::cos(2. * PI * 3. * x) + 1.
 }
@@ -30,9 +33,10 @@ fn sample_coords(domain: (f32, f32), freq_range: (f32, f32)) -> Vec<(f32, f32)> 
 #[macroquad::main(window_conf)]
 async fn main() {
     let domain: (f32, f32) = (0., 4.);
+    let freq_domain: (f32, f32) = (0.05, 4.05);
     let mut freq: f32;
 
-    let coords: Vec<(f32, f32)> = sample_coords(domain, (0.05, 4.05));
+    let coords: Vec<(f32, f32)> = sample_coords(domain, freq_domain);
     let mut xcoords: Vec<f32> = Vec::new();
     let mut ycoords: Vec<f32> = Vec::new();
     for &coord in &coords {
@@ -41,41 +45,39 @@ async fn main() {
     }
 
     loop {
-        freq = 2. * f32::sin(macroquad::time::get_time() as f32 / 2.) + 2.05;
+        freq = 2. * f32::sin(macroquad::time::get_time() as f32 / 2.) + (freq_domain.1 - freq_domain.0) / 2. + freq_domain.0;
 
         clear_background(BLACK);
 
         graph::draw_fn(
             f,
-            graph::Rect::new(0, 0, 800, 200),
+            graph::Rect::new(0, 0, SCRW as i32, 200),
             domain
         );
-        draw_line(0., 200., 800., 200., 2., WHITE);
+        draw_line(0., 200., SCRW, 200., 2., WHITE);
 
-        let ppu: f32 = 800 as f32 / (domain.1 - domain.0);
+        let ppu: f32 = SCRW / (domain.1 - domain.0);
         for i in 0..50 {
             let x: f32 = i as f32 / freq * ppu;
-            if x > 800. {
+            if x > SCRW {
                 break;
             }
 
             draw_line(x, 0., x, 200., 2., RED);
         }
 
+        let polar_center: (f32, f32) = (150., 350.);
         let ppu: f32 = graph::draw_polar(
-            f,
-            (150., 350.),
-            100.,
-            domain,
-            freq
+            f, polar_center, 100.,
+            domain, freq
         );
-        draw_text(format!("Frequency: {:.2} cycles/second", freq).as_str(), 10., 600. - 24., 24., WHITE);
+        draw_text(format!("Frequency: {:.2} cycles/second", freq).as_str(), 10., SCRH - 24., 24., WHITE);
 
         let freq_rect: graph::Rect = graph::Rect::new(400, 270, 350, 350);
         graph::draw_points(&xcoords, freq_rect, WHITE);
         graph::draw_points(&ycoords, freq_rect, GRAY);
-        let freq_x: f32 = 400. + (350. / (domain.1 - domain.0)) * freq;
-        draw_line(freq_x, 600., freq_x, 200., 2., GREEN);
+        let freq_x: f32 = freq_rect.x as f32 + (freq_rect.w as f32 / (domain.1 - domain.0)) * freq;
+        draw_line(freq_x, SCRH, freq_x, 200., 2., GREEN);
 
         let polar_data: Vec<(f32, f32)> = graph::sample_polar(f, domain, freq, 1000);
         let mut cm: (f32, f32) = (0., 0.);
@@ -85,7 +87,8 @@ async fn main() {
         }
         cm.0 /= polar_data.len() as f32;
         cm.1 /= polar_data.len() as f32;
-        let circle: (f32, f32) = (150. + cm.0 * ppu, 350. + cm.1 * ppu);
+
+        let circle: (f32, f32) = (polar_center.0 + cm.0 * ppu, polar_center.1 + cm.1 * ppu);
         draw_circle(circle.0, circle.1, 5., GREEN);
 
         next_frame().await
@@ -95,8 +98,8 @@ async fn main() {
 fn window_conf() -> Conf {
     Conf {
         window_resizable: false,
-        window_width: 800,
-        window_height: 600,
+        window_width: SCRW as i32,
+        window_height: SCRH as i32,
         ..Default::default()
     }
 }
