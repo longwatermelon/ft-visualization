@@ -9,6 +9,8 @@ pub struct Rect {
     pub h: i32
 }
 
+pub const SAMPLES: i32 = 1000;
+
 impl Rect {
     pub fn new(x: i32, y: i32, w: i32, h: i32) -> Self {
         Self { x, y, w, h }
@@ -25,7 +27,7 @@ pub fn sample_points(f: fn(f32) -> f32, domain: (f32, f32), samples: i32) -> Vec
 }
 
 pub fn draw_fn(f: fn(f32) -> f32, rect: Rect, domain: (f32, f32)) {
-    let data: Vec<f32> = sample_points(f, domain, 1000);
+    let data: Vec<f32> = sample_points(f, domain, SAMPLES);
     draw_points(&data, rect, WHITE);
 }
 
@@ -79,13 +81,12 @@ pub fn sample_polar(f: fn(f32) -> f32, domain: (f32, f32), freq: f32, samples: i
 
 // Return ppu
 pub fn draw_polar(f: fn(f32) -> f32, center: (f32, f32), radius: f32, domain: (f32, f32), freq: f32) -> f32 {
-    let samples: i32 = 1000;
-    let data: Vec<(f32, f32)> = sample_polar(f, domain, freq, samples);
+    let data: Vec<(f32, f32)> = sample_polar(f, domain, freq, SAMPLES);
 
-    let dt: f32 = (domain.1 - domain.0) / (samples as f32);
+    let dt: f32 = (domain.1 - domain.0) / (SAMPLES as f32);
 
     let mut vuy: Vec<f32> = Vec::new();
-    for i in 0..samples {
+    for i in 0..SAMPLES {
         vuy.push(f(i as f32 * dt));
     }
 
@@ -99,7 +100,7 @@ pub fn draw_polar(f: fn(f32) -> f32, center: (f32, f32), radius: f32, domain: (f
     let ppu: f32 = radius / max_y;
 
     let mut prev: (f32, f32) = (center.0, center.1);
-    for i in 0..samples {
+    for i in 0..SAMPLES {
         let point: (f32, f32) = (
             center.0 + data[i as usize].0 * ppu,
             center.1 + data[i as usize].1 * ppu
