@@ -17,17 +17,17 @@ impl Rect {
     }
 }
 
-pub fn sample_points(f: fn(f32) -> f32, domain: (f32, f32), samples: i32) -> Vec<f32> {
+pub fn sample_points(f: fn(f32) -> f32, domain: (f32, f32)) -> Vec<f32> {
     let mut data: Vec<f32> = Vec::new();
-    for i in 0..samples {
-        data.push(f((domain.1 - domain.0) / samples as f32 * i as f32));
+    for i in 0..SAMPLES {
+        data.push(f((domain.1 - domain.0) / SAMPLES as f32 * i as f32));
     }
 
     return data;
 }
 
 pub fn draw_fn(f: fn(f32) -> f32, rect: Rect, domain: (f32, f32)) {
-    let data: Vec<f32> = sample_points(f, domain, SAMPLES);
+    let data: Vec<f32> = sample_points(f, domain);
     draw_points(&data, rect, WHITE);
 }
 
@@ -65,10 +65,10 @@ pub fn draw_points(data: &Vec<f32>, rect: Rect, col: Color) {
     }
 }
 
-pub fn sample_polar(f: fn(f32) -> f32, domain: (f32, f32), freq: f32, samples: i32) -> Vec<(f32, f32)> {
+pub fn sample_polar(f: fn(f32) -> f32, domain: (f32, f32), freq: f32) -> Vec<(f32, f32)> {
     let mut coords: Vec<(f32, f32)> = Vec::new();
-    let dt: f32 = (domain.1 - domain.0) / (samples as f32);
-    for i in 0..samples {
+    let dt: f32 = (domain.1 - domain.0) / (SAMPLES as f32);
+    for i in 0..SAMPLES {
         let t: f32 = i as f32 * dt;
         coords.push((
             f32::cos(2. * PI * freq * t) * f(t),
@@ -81,7 +81,7 @@ pub fn sample_polar(f: fn(f32) -> f32, domain: (f32, f32), freq: f32, samples: i
 
 // Return ppu
 pub fn draw_polar(f: fn(f32) -> f32, center: (f32, f32), radius: f32, domain: (f32, f32), freq: f32) -> f32 {
-    let data: Vec<(f32, f32)> = sample_polar(f, domain, freq, SAMPLES);
+    let data: Vec<(f32, f32)> = sample_polar(f, domain, freq);
 
     let dt: f32 = (domain.1 - domain.0) / (SAMPLES as f32);
 

@@ -16,7 +16,7 @@ fn sample_coords(domain: (f32, f32), freq_range: (f32, f32)) -> Vec<(f32, f32)> 
 
     for i in 0..SAMPLES {
         let freq: f32 = freq_range.0 + (freq_range.1 - freq_range.0) / SAMPLES as f32 * i as f32;
-        let coords: Vec<(f32, f32)> = graph::sample_polar(f, domain, freq, SAMPLES);
+        let coords: Vec<(f32, f32)> = graph::sample_polar(f, domain, freq);
 
         let mut cm: (f32, f32) = (0., 0.);
         for &coord in &coords {
@@ -80,7 +80,7 @@ async fn main() {
         let freq_x: f32 = freq_rect.x as f32 + (freq_rect.w as f32 / (domain.1 - domain.0)) * freq;
         draw_line(freq_x, SCRH, freq_x, 200., 2., GREEN);
 
-        let polar_data: Vec<(f32, f32)> = graph::sample_polar(f, domain, freq, SAMPLES);
+        let polar_data: Vec<(f32, f32)> = graph::sample_polar(f, domain, freq);
         let mut cm: (f32, f32) = (0., 0.);
         for &coord in &polar_data {
             cm.0 += coord.0;
