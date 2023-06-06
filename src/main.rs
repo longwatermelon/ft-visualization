@@ -28,7 +28,7 @@ fn sample_coords(domain: (f32, f32), freq_range: (f32, f32)) -> Vec<(f32, f32)> 
         vcm.push(cm);
     }
 
-    return vcm;
+    vcm
 }
 
 #[macroquad::main(window_conf)]

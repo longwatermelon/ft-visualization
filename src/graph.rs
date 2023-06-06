@@ -23,7 +23,7 @@ pub fn sample_points(f: fn(f32) -> f32, domain: (f32, f32)) -> Vec<f32> {
         data.push(f((domain.1 - domain.0) / SAMPLES as f32 * i as f32));
     }
 
-    return data;
+    data
 }
 
 pub fn draw_fn(f: fn(f32) -> f32, rect: Rect, domain: (f32, f32)) {
@@ -76,7 +76,7 @@ pub fn sample_polar(f: fn(f32) -> f32, domain: (f32, f32), freq: f32) -> Vec<(f3
         ));
     }
 
-    return coords;
+    coords
 }
 
 // Return ppu
@@ -91,9 +91,9 @@ pub fn draw_polar(f: fn(f32) -> f32, center: (f32, f32), radius: f32, domain: (f
     }
 
     let mut max_y = -f32::INFINITY;
-    for i in 0..vuy.len() {
-        if vuy[i] > max_y {
-            max_y = vuy[i];
+    for &y in &vuy {
+        if y > max_y {
+            max_y = y;
         }
     }
 
@@ -115,6 +115,6 @@ pub fn draw_polar(f: fn(f32) -> f32, center: (f32, f32), radius: f32, domain: (f
         prev = point;
     }
 
-    return ppu;
+    ppu
 }
 
