@@ -101,6 +101,7 @@ fn window_conf() -> Conf {
         window_resizable: false,
         window_width: SCRW as i32,
         window_height: SCRH as i32,
+        window_title: String::from("Fourier transform visual"),
         ..Default::default()
     }
 }
