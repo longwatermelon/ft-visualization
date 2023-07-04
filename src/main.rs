@@ -72,7 +72,7 @@ async fn main() {
             f, polar_center, 100.,
             domain, freq
         );
-        draw_text(format!("Frequency: {:.2} cycles/second", freq).as_str(), 10., SCRH - 24., 24., WHITE);
+        draw_text(format!("Frequency: {:.2} Hz", freq).as_str(), 10., SCRH - 24., 24., WHITE);
 
         let freq_rect: graph::Rect = graph::Rect::new(400, 270, 350, 350);
         graph::draw_points(&xcoords, freq_rect, WHITE);
